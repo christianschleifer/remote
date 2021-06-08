@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/ChristianSchleifer/mremoteng/pkg/configsource/xmlfile"
 	"github.com/ChristianSchleifer/mremoteng/pkg/connectionhandler/gnome"
+	"github.com/ChristianSchleifer/mremoteng/pkg/connectionhandler/ssh"
 	"github.com/ChristianSchleifer/mremoteng/pkg/controller"
 	"github.com/ChristianSchleifer/mremoteng/pkg/controller/api"
 	"github.com/ChristianSchleifer/mremoteng/pkg/viewer/terminal"
@@ -11,6 +12,7 @@ import (
 )
 
 const GnomeHandler = "gnome"
+const SshHandler = "ssh"
 const TerminalViewer = "terminal"
 
 var configFile string
@@ -60,10 +62,13 @@ func startCmdFn(_ *cobra.Command, _ []string) {
 	}
 	source := xmlfile.NewConfigSource(absolutePath)
 
-	if handlerConfig == GnomeHandler {
+	switch handlerConfig {
+	case GnomeHandler:
 		handler = gnome.NewHandler()
-	} else {
-		panic("Currently, only a 'gnome' connection handler exists.")
+	case SshHandler:
+		handler = ssh.NewHandler()
+	default:
+		panic("Currently, only 'gnome' and 'ssh' connection handler exists.")
 	}
 
 	ctrl := controller.NewController(source, handler)

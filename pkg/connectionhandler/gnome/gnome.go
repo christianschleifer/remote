@@ -13,6 +13,11 @@ func NewHandler() api.ConnectionHandler {
 	return &gnomeSshHandler{}
 }
 
+// Returns if the  UI has to be release before the handler is invoked
+func (handler *gnomeSshHandler) TransferControlForUI() bool {
+	return false
+}
+
 // Handle opens up a new terminal window and creates a ssh connection using the passed api.Connection data.
 func (handler *gnomeSshHandler) Handle(connection api.Connection) {
 	gnomeArguments := []string{"-x"}

@@ -8,11 +8,12 @@ import (
 
 type terminalViewer struct {
 	controller api.Controller
+	application *tview.Application
 }
 
 func NewViewer(controller api.Controller) api.Viewer {
 	return &terminalViewer{
-		controller,
+		controller, tview.NewApplication(),
 	}
 }
 
@@ -24,11 +25,9 @@ func (terminalView *terminalViewer) View() {
 
 	treeView := tview.NewTreeView().SetRoot(root).SetCurrentNode(root)
 
-	application := tview.NewApplication()
-	application.SetRoot(treeView, true)
-	application.EnableMouse(true)
-
-	if err := application.Run(); err != nil {
+	terminalView.application.SetRoot(treeView, true)
+	terminalView.application.EnableMouse(true)
+	if err := terminalView.application.Run(); err != nil {
 		panic(err)
 	}
 }
@@ -57,6 +56,9 @@ func (terminalView *terminalViewer) add(target *tview.TreeNode, node api.Node) {
 		newNode.SetExpanded(false)
 
 		newNode.SetSelectedFunc(func() {
+			if terminalView.controller.TransferControlForUIToHandler() == true {
+				terminalView.application.Stop()
+			}
 			terminalView.controller.ConnectionSelectedHandler(n.Id)
 		})
 	}
