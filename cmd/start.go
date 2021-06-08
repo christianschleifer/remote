@@ -62,13 +62,14 @@ func startCmdFn(_ *cobra.Command, _ []string) {
 	}
 	source := xmlfile.NewConfigSource(absolutePath)
 
-	if handlerConfig == GnomeHandler {
+	switch handlerConfig {
+	case GnomeHandler:
 		handler = gnome.NewHandler()
-	} else 	if handlerConfig == SshHandler {
-				handler = ssh.NewHandler()
-			}	else {
-					panic("Currently, only 'gnome' and 'ssh' connection handler exists.")
-				}
+	case SshHandler:
+		handler = ssh.NewHandler()
+	default:
+		panic("Currently, only 'gnome' and 'ssh' connection handler exists.")
+	}
 
 	ctrl := controller.NewController(source, handler)
 
