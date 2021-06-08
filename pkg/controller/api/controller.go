@@ -4,5 +4,6 @@ package api
 // Implement this interface to use different business logic when interacting with Collection datastructures.
 type Controller interface {
 	ConnectionSelectedHandler(connectionId uint)
+	TransferControlForUIToHandler() bool
 	GetCollection() Collection
 }

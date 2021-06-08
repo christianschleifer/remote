@@ -34,7 +34,10 @@ func (c *controller) ConnectionSelectedHandler(id uint) {
 	}
 
 	c.handler.Handle(*connection)
+}
 
+func (c *controller) TransferControlForUIToHandler() bool {
+	return c.handler.TransferControlForUI()
 }
 
 func (c *controller) getConnectionById(id uint) (*api.Connection, error) {
